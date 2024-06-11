@@ -63,3 +63,7 @@ cargo run --bin send_transactions
 - [x] Verify correctness of execution
 - Check balance after 1 transaction
 - Check balance after some transactions
+
+## 4. Genarate genesis reth
+- Create genesis for reth env
+- Take template from [template_reth_genesis.json](/eth_tests/template_reth_genesis.json) and manually add genesis acount balance
