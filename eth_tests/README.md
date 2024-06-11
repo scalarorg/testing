@@ -20,6 +20,42 @@ Send all converted transactions on EVMOS environment
 ```bash
 cargo run --bin send_transactions
 ```
+
+## 4. Genarate genesis reth
+- Create genesis for reth env
+- Take template from [template_reth_genesis.json](/eth_tests/template_reth_genesis.json) and manually add genesis acount balance
+
+## 5. Generate transactions reth
+- Create transactions compatible with Reth to simulate sending tracsactions
+- Take 1 template transaction and adjust sender, recipient and a bit metrics
+[Code](src/bin/generate_transactions_reth.rs)
+```bash
+cargo run --bin generate_transactions_reth
+```
+
+## 6. Multi thread send transactions
+Send all converted transactions with multiple threads 
+[Code](src/bin/send_transactions_multiple_threads.rs)
+```bash
+cargo run --bin send_transactions_multiple_threads
+```
+
+But when the number of transactions growing, transactions making time is quite large 
+-> Make bytes transactions and Send bytes transactions
+[make_byte_txs.rs](src/bin/make_byte_txs.rs)
+[send_byte_txs.rs](src/bin/send_byte_txs.rs)
+
+```bash
+cargo run --bin make_byte_txs
+cargo run --bin send_byte_txs
+```
+
+## 7. Verify transaction
+Send a transaction to ETH environment (EVMOS, Reth), wait for the receipt, show the transaction's details, account balance before and after transaction
+```bash
+cargo run --bin verify_transaction
+```
+
 # Status
 
 ## Folder: ../evmos_mainnet_transactions_03
@@ -64,6 +100,4 @@ cargo run --bin send_transactions
 - Check balance after 1 transaction
 - Check balance after some transactions
 
-## 4. Genarate genesis reth
-- Create genesis for reth env
-- Take template from [template_reth_genesis.json](/eth_tests/template_reth_genesis.json) and manually add genesis acount balance
+
