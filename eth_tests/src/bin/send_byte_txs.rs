@@ -57,6 +57,7 @@ async fn send_signed_raw_transaction(web3: Web3<Http>, signed_raw_transaction: B
 }
 
 #[tokio::main]
+// #[tokio::main(flavor = "multi_thread", worker_threads = 8)]
 async fn main() -> Result<(), Box<dyn Error>> {
     let env_path = ".env.send_transactions";
     dotenv::from_path(env_path).ok();

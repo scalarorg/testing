@@ -45,7 +45,16 @@ impl Tester {
 
         // Send the transaction
         
-        let tx_hash = self.web3.eth().send_raw_transaction(signed_tx.raw_transaction).await?;
+        // let tx_hash = self.web3.eth().send_raw_transaction(signed_tx.raw_transaction).await?;
+        let tx_hash = loop {
+            let copy_raw_tx = signed_tx.raw_transaction.clone();
+            match self.web3.eth().send_raw_transaction(copy_raw_tx).await {
+                Ok(tx_hash) => break tx_hash,
+                Err(_) => {
+                    tokio::time::sleep(tokio::time::Duration::from_millis(1)).await;
+                }
+            }
+        };
         Ok(tx_hash)
     }
 
