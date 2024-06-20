@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@evmos/address-converter": "^0.1.9"
+  }
+}

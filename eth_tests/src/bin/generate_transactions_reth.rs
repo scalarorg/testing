@@ -25,7 +25,7 @@ fn random_usize(rng: &mut rand::rngs::ThreadRng, L: usize, R: usize) -> usize {
 
 #[tokio::main]
 async fn main() {
-    let num_of_transactions = 10;
+    let num_of_transactions = 100;
     let output_dir = "../../generated_transactions_reth";
 
     remove_and_recreate_output_directory(output_dir).await.unwrap();

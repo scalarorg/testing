@@ -11,3 +11,15 @@ This folder helps user build genesis file for EVMOS and generate 4 nodes ready-f
 - cd evmos_build_env
 - Run `evmos-create-genesis-file.sh` script: `./evmos-create-genesis-file.sh`
 - Run docker-compose: `docker-compose -f evmos-docker-compose.yml up -d`
+
+## Prepare genesis file for Scalar testnet (evmos executor)
+- Create the addresses map from hex addresses in address_manager.json file to evmos addresses
+```bash
+npm install
+node convert_hex_to_evmos_addresses.js
+```
+
+- Create the genesis file
+```bash
+./testnet-evmos-scalar-create-genesis-file.sh
+```
