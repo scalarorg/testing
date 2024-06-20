@@ -3,7 +3,9 @@ CHAIN=${CHAIN:-evmos}
 CHAIN_ID=${CHAIN_ID:-${CHAIN}_9000-1}
 CHAIND=${CHAIN}d
 HOMEDIR=$(pwd)/$CHAIND
+ADDRESS_FILE=$(pwd)/hex_to_evmos_addresses_map_743.json
 OUTPUTDIR=$(pwd)/build
+
 KEYRING=test
 KEYALGO=eth_secp256k1
 MONIKER=orchestrator
@@ -76,7 +78,7 @@ jq '.app_state["evm"]["params"]["evm_denom"]="aevmos"' "$GENESIS" >"$TMP_GENESIS
 jq '.app_state["inflation"]["params"]["mint_denom"]="aevmos"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
 # Set gas limit in genesis
-jq '.consensus_params["block"]["max_gas"]="10000000"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
+jq '.consensus_params["block"]["max_gas"]="1000000000000000"' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
 # Set claims start time
 current_date=$(date -u +"%Y-%m-%dT%TZ")
@@ -154,12 +156,24 @@ $CHAIND add-genesis-account "$($CHAIND keys show $GENESIS_VAL2_KEY -a --keyring-
 $CHAIND add-genesis-account "$($CHAIND keys show $GENESIS_VAL3_KEY -a --keyring-backend $KEYRING --home $HOMEDIR)" 100000000000000000000000000aevmos --keyring-backend $KEYRING --home $HOMEDIR
 $CHAIND add-genesis-account "$($CHAIND keys show $GENESIS_VAL4_KEY -a --keyring-backend $KEYRING --home $HOMEDIR)" 100000000000000000000000000aevmos --keyring-backend $KEYRING --home $HOMEDIR
 
-$CHAIND add-genesis-account "evmos17ullasx2ahwvw4wqecjpz45jppzy7h9prtrsr8" 100000000000000000000000000aevmos --keyring-backend $KEYRING --home $HOMEDIR
+
+# Read the JSON file and get the keys
+keys=$(jq -r 'keys[]' "$ADDRESS_FILE")
+
+# Iterate over the keys
+for key in $keys; do
+	# Get the value for each key
+	value=$(jq -r --arg key "$key" '.[$key]' "$ADDRESS_FILE")
+	# Print the key and its corresponding value
+	echo "$key: $value"
+	# Add the key and its corresponding value to the genesis account
+	$CHAIND add-genesis-account $value 100000000000000000000000000aevmos --keyring-backend $KEYRING --home $HOMEDIR
+done
 
 
 # bc is required to add these big numbers
 # NOTE: sum of all genesis accounts tokens is equal to total supply at initialization 
-total_supply=500000000000000000000010000
+total_supply=74700000000000000000000010000
 jq -r --arg total_supply "$total_supply" '.app_state["bank"]["supply"][0]["amount"]=$total_supply' "$GENESIS" >"$TMP_GENESIS" && mv "$TMP_GENESIS" "$GENESIS"
 
 # Sign genesis transaction

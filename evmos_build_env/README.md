@@ -18,6 +18,7 @@ This folder helps user build genesis file for EVMOS and generate 4 nodes ready-f
 npm install
 node convert_hex_to_evmos_addresses.js
 ```
+Can modify file name of address_manager.json
 
 - Create the genesis file
 ```bash
