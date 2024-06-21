@@ -75,8 +75,7 @@ fn random_usize(rng: &mut rand::rngs::ThreadRng, L: usize, R: usize) -> usize {
     L + rng.gen::<usize>() % (R - L + 1)
 }
 
-async fn create_transaction(address_manager: &AddressManager, i: usize) -> Result<MyTransactionRequest, Box<dyn std::error::Error>> {
-    let (_, addresses_size) = address_manager.info();
+async fn create_transaction(address_manager: &AddressManager, addresses_size: usize,i: usize) -> Result<MyTransactionRequest, Box<dyn std::error::Error>> {
     let mut rng = rand::thread_rng();
     let to = address_manager.get_converted_address_with_index(i%addresses_size);
     let from = address_manager.get_converted_address_with_index(i%addresses_size);
@@ -108,9 +107,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let address_manager_path = "../evmos_build_env/address_manager_743.json";
     let address_manager = AddressManager::load_from_file(address_manager_path).unwrap();
+    let (_, addresses_size) = address_manager.info();
 
     for index in 0..10 {
-        let transaction = create_transaction(&address_manager, index).await?;
+        let transaction = create_transaction(&address_manager, addresses_size, index).await?;
         let transaction = serde_json::to_string_pretty(&transaction).unwrap();
         let file_name = format!("{}/transactions/num_{}.json", transactions_folder, index);
         tokio::fs::write(&file_name, &transaction).await?;
