@@ -1,6 +1,4 @@
 use eth_tests::address_manager::{self, AddressManager};
-use ethers::etherscan::gas;
-use rand::seq::SliceRandom;
 use rand::Rng;
 use serde::Serialize;
 use std::fs;
