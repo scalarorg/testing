@@ -6,6 +6,7 @@ const file_name = "address_manager.json";
 const address_manager = JSON.parse(fs.readFileSync(file_name, 'utf8'));
 
 const address_map = address_manager['converted_address_map'];
+console.log(typeof address_map);
 // Check length of address_map
 const num_of_address = Object.keys(address_map).length;
 console.log(`Number of addresses: ${num_of_address}`);
